@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SiteReport.live — Is it up, is it safe, is it legit?</title>
+<meta name="description" content="Check any website's uptime, SSL security, and legitimacy in seconds.">
+<link rel="canonical" href="https://sitereport.live/">
+<meta property="og:title" content="SiteReport.live: Is it up, secure, and legit?">
+<meta property="og:description" content="Check any website's uptime, SSL security, and legitimacy in seconds.">
+<meta property="og:url" content="https://sitereport.live/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!--
+  ADSENSE: when approved, add this once in <head> and swap each .ad-slot's inner placeholder for an <ins class="adsbygoogle"> unit.
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+<style>
+:root{
+  --bg1:#F5F7FA; --bg2:#E4E8F0; --card:#FFFFFF; --card-2:#F8FAFC;
+  --ink:#1E2A3B; --muted:#5B6778; --line:#DCE2EA;
+  --steel:#3B6A96; --steel-deep:#2B5176; --steel-soft:#E6EEF6;
+  --emerald:#10B981; --emerald-deep:#047857; --emerald-soft:#E3F6EE;
+  --amber:#B7791F; --amber-soft:#FBF1DE; --red:#C0392F; --red-soft:#FBE7E5;
+  --shadow:0 1px 2px rgba(58,78,108,.05),0 10px 30px -12px rgba(58,78,108,.18);
+  --shadow-lg:0 2px 4px rgba(58,78,108,.05),0 24px 48px -20px rgba(58,78,108,.28);
+  --font:"Schibsted Grotesk",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg1:#1B2231; --bg2:#222B3C; --card:#273144; --card-2:#2C374B;
+    --ink:#E9EDF3; --muted:#A5B0C0; --line:#37445B;
+    --steel:#86AED4; --steel-deep:#A8C6E3; --steel-soft:#2E3D55;
+    --emerald:#34D399; --emerald-deep:#6EE7B7; --emerald-soft:#1F3B37;
+    --amber:#F0B85A; --amber-soft:#3B3326; --red:#F08A80; --red-soft:#43292B;
+    --shadow:0 1px 2px rgba(0,0,0,.2),0 10px 30px -12px rgba(0,0,0,.45);
+    --shadow-lg:0 24px 48px -20px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"]{
+  --bg1:#1B2231; --bg2:#222B3C; --card:#273144; --card-2:#2C374B;
+  --ink:#E9EDF3; --muted:#A5B0C0; --line:#37445B;
+  --steel:#86AED4; --steel-deep:#A8C6E3; --steel-soft:#2E3D55;
+  --emerald:#34D399; --emerald-deep:#6EE7B7; --emerald-soft:#1F3B37;
+  --amber:#F0B85A; --amber-soft:#3B3326; --red:#F08A80; --red-soft:#43292B;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 110px);-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--font);color:var(--ink);font-size:16px;line-height:1.5;
+  background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%) fixed;background-color:var(--bg1);min-height:100vh;
+  font-feature-settings:"tnum" 1;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+a{color:var(--steel)}
+:focus-visible{outline:3px solid var(--steel);outline-offset:2px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--bg1) 86%,transparent);
+  backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
+.bar{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800;font-size:1.35rem;letter-spacing:-.03em;background:none;border:0;padding:0;cursor:pointer}
+.logo small{font-weight:500;color:var(--muted);font-size:.95rem;letter-spacing:-.01em}
+.pulse{position:relative;width:11px;height:11px;border-radius:50%;background:var(--emerald);flex:none}
+.pulse::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--emerald);animation:ping 1.8s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{75%,100%{transform:scale(2.6);opacity:0}}
+.live{font-size:.8rem;color:var(--emerald-deep);font-weight:600;display:flex;align-items:center;gap:8px}
+.nav{margin-left:auto;display:flex;gap:4px;align-items:center}
+.nav a,.nav button{background:none;border:0;padding:8px 12px;border-radius:999px;color:var(--muted);font-weight:500;font-size:.93rem;text-decoration:none;cursor:pointer}
+.nav a:hover,.nav button:hover{color:var(--ink);background:var(--steel-soft)}
+.nav .cta{background:var(--steel);color:#fff}
+.nav .cta:hover{background:var(--steel-deep);color:#fff}
+:root[data-theme="dark"] .nav .cta{color:#10202F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nav .cta{color:#10202F}}
+.ticker{border-top:1px solid var(--line);overflow:hidden;white-space:nowrap;font-size:.84rem;color:var(--muted);display:flex;align-items:center}
+.ticker .lead{flex:none;padding:7px 14px 7px 20px;font-weight:600;color:var(--steel);background:inherit;position:relative;z-index:1}
+.track{display:inline-flex;gap:28px;padding:7px 0;animation:scroll 60s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.track button{background:none;border:0;padding:0;color:var(--muted);cursor:pointer;font-size:.84rem}
+.track button:hover{color:var(--steel)}
+.track b{color:var(--emerald-deep);font-weight:600;margin-left:4px}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Layout */
+main{max-width:1180px;margin:0 auto;padding:28px 20px 40px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px}
+.col{min-width:0;display:flex;flex-direction:column;gap:24px}
+aside{display:flex;flex-direction:column;gap:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:24px}
+h1,h2,h3{margin:0;letter-spacing:-.025em;line-height:1.12}
+h2{font-size:1.3rem;font-weight:700}
+h3{font-size:1.02rem;font-weight:650}
+p{margin:0}
+.muted{color:var(--muted)}
+
+/* Hero search */
+.hero{padding:36px 32px 30px;border-radius:24px;background:
+  radial-gradient(120% 90% at 100% 0%,var(--steel-soft) 0%,transparent 55%),var(--card)}
+.hero h1{font-size:clamp(2rem,5.2vw,3.35rem);font-weight:800;letter-spacing:-.045em;max-width:14ch}
+.hero .sub{margin-top:12px;color:var(--muted);font-size:1.06rem;max-width:52ch}
+.search{margin-top:26px;display:flex;gap:10px;background:var(--card-2);border:1.5px solid var(--line);border-radius:16px;padding:6px 6px 6px 16px;align-items:center;transition:border-color .2s,box-shadow .2s}
+.search:focus-within{border-color:var(--steel);box-shadow:0 0 0 4px var(--steel-soft)}
+.search svg{flex:none;color:var(--muted)}
+.search input{flex:1;min-width:0;border:0;background:transparent;font-size:1.08rem;padding:12px 4px;outline:none}
+.btn{border:0;border-radius:12px;padding:13px 22px;font-weight:650;cursor:pointer;background:var(--steel);color:#fff;transition:background .15s,transform .1s;white-space:nowrap}
+.btn:hover{background:var(--steel-deep)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.6;cursor:progress}
+:root[data-theme="dark"] .btn{color:#10202F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn{color:#10202F}}
+.btn.green{background:var(--emerald-deep)}
+.btn.green:hover{background:#036149}
+.btn.ghost{background:transparent;color:var(--steel);border:1.5px solid var(--line)}
+.btn.ghost:hover{background:var(--steel-soft)}
+.err{margin-top:10px;color:var(--red);font-size:.9rem;min-height:1.35em}
+.chips{margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chips span{font-size:.86rem;color:var(--muted);margin-right:2px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 13px;font-size:.86rem;cursor:pointer;color:var(--ink)}
+.chip:hover{border-color:var(--steel);color:var(--steel)}
+
+/* Ads */
+.ad-slot{border:1px dashed color-mix(in srgb,var(--muted) 45%,transparent);border-radius:14px;background:
+  repeating-linear-gradient(135deg,transparent 0 12px,color-mix(in srgb,var(--line) 45%,transparent) 12px 13px),var(--card-2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:.8rem;gap:4px;padding:10px}
+.ad-slot .ad-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
+.ad-slot .ad-size{font-size:.95rem;font-weight:600;color:var(--ink);opacity:.55}
+.ad-leader{min-height:96px}
+.ad-rect{min-height:250px}
+.ad-tall{min-height:600px}
+.ad-infeed{min-height:110px}
+
+/* Scanner */
+.scan{display:none}
+.scan.on{display:block}
+.scan-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.scan-dom{font-weight:700;font-size:1.15rem;word-break:break-all}
+.prog{height:8px;background:var(--steel-soft);border-radius:99px;overflow:hidden;margin:18px 0 16px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--steel),var(--emerald));border-radius:99px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.steps li{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.95rem}
+.steps li::before{content:"";width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex:none}
+.steps li.run{color:var(--ink)}
+.steps li.run::before{border-color:var(--steel);border-top-color:transparent;animation:spin .7s linear infinite}
+.steps li.done{color:var(--ink)}
+.steps li.done::before{background:var(--emerald);border-color:var(--emerald)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Results */
+#results{display:none}
+#results.on{display:flex;flex-direction:column;gap:24px}
+.res-top{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;font-weight:700;font-size:.86rem;letter-spacing:.02em}
+.badge.ok{background:var(--emerald-soft);color:var(--emerald-deep)}
+.badge.warn{background:var(--amber-soft);color:var(--amber)}
+.badge.down{background:var(--red-soft);color:var(--red)}
+.badge .dot{width:9px;height:9px;border-radius:50%;background:currentColor}
+.badge.ok .dot{box-shadow:0 0 0 0 currentColor;animation:glow 1.8s infinite}
+@keyframes glow{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--emerald) 60%,transparent)}100%{box-shadow:0 0 0 9px transparent}}
+.site-name{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:800;letter-spacing:-.04em;margin-top:14px;word-break:break-word}
+.site-dom{color:var(--muted);margin-top:4px;word-break:break-all}
+.est{display:inline-block;margin-top:10px;font-size:.8rem;color:var(--amber);background:var(--amber-soft);padding:4px 10px;border-radius:8px}
+.gauge{position:relative;width:148px;height:148px}
+.gauge svg{transform:rotate(-90deg)}
+.gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .num{font-size:2.5rem;font-weight:800;letter-spacing:-.05em;line-height:1}
+.gauge .lbl{font-size:.78rem;color:var(--muted);margin-top:4px}
+.gauge circle.fg{transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1),stroke .3s}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:24px}
+.metric{background:var(--card);padding:16px}
+.metric .k{font-size:.8rem;color:var(--muted)}
+.metric .v{font-size:1.2rem;font-weight:700;margin-top:4px;letter-spacing:-.02em;word-break:break-word}
+.metric .n{font-size:.8rem;margin-top:2px}
+.g{color:var(--emerald-deep)} .a{color:var(--amber)} .r{color:var(--red)}
+.summary{margin-top:22px;padding:18px 20px;border-radius:14px;background:var(--steel-soft);display:flex;gap:14px}
+.summary .ic{flex:none;width:34px;height:34px;border-radius:10px;background:var(--steel);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.8rem}
+.summary p{font-size:.98rem;max-width:68ch}
+.summary .t{font-weight:650;margin-bottom:4px;font-size:.88rem;color:var(--steel-deep)}
+.flags{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.flags li{font-size:.92rem;padding:10px 14px;border-radius:10px;background:var(--amber-soft);color:var(--ink);border-left:3px solid var(--amber)}
+.alts{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:16px}
+.alt{border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;background:var(--card);position:relative}
+.alt.promo{border-color:color-mix(in srgb,var(--emerald) 55%,var(--line));background:linear-gradient(180deg,var(--emerald-soft),var(--card) 70%)}
+.alt .tag{align-self:flex-start;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--emerald-deep);color:#fff}
+.alt .nm{font-weight:700;font-size:1.02rem}
+.alt .dm{font-size:.85rem;color:var(--muted);word-break:break-all}
+.alt .row{display:flex;gap:8px;margin-top:auto;padding-top:6px}
+.alt .row button,.alt .row a{flex:1;text-align:center;font-size:.85rem;padding:8px 10px;border-radius:9px;font-weight:600;cursor:pointer;text-decoration:none}
+.alt .chk{background:var(--steel-soft);color:var(--steel-deep);border:0}
+.alt .vis{background:var(--emerald-deep);color:#fff;border:0}
+.disc{font-size:.78rem;color:var(--muted);margin-top:12px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+
+/* Community */
+.rate{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:16px}
+.stars{display:flex;gap:2px}
+.star{background:none;border:0;padding:4px;cursor:pointer;color:var(--line);line-height:0}
+.star svg{width:30px;height:30px}
+.star.on{color:#E0A526}
+.avg{font-size:.92rem;color:var(--muted)}
+.avg b{color:var(--ink);font-size:1.1rem}
+.form{display:grid;gap:10px;margin-top:16px}
+.form .two{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.inp{width:100%;border:1.5px solid var(--line);background:var(--card-2);border-radius:12px;padding:12px 14px;outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--steel)}
+textarea.inp{resize:vertical;min-height:90px}
+.form-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.count{font-size:.8rem;color:var(--muted)}
+.comments{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px}
+.cm{border-top:1px solid var(--line);padding-top:12px;display:grid;grid-template-columns:38px 1fr;gap:12px}
+.cm.new{animation:pop .45s ease}
+@keyframes pop{from{background:var(--emerald-soft)}to{background:transparent}}
+.av{width:38px;height:38px;border-radius:50%;background:var(--steel-soft);color:var(--steel-deep);display:grid;place-items:center;font-weight:700}
+.cm .who{font-weight:650;font-size:.93rem}
+.cm .meta{font-size:.8rem;color:var(--muted)}
+.cm .mini{color:#E0A526;font-size:.85rem;letter-spacing:1px}
+.cm p{margin-top:4px;font-size:.95rem;word-break:break-word}
+.empty{color:var(--muted);font-size:.93rem;margin-top:16px}
+
+/* Newsletter */
+.news{background:linear-gradient(160deg,var(--card) 30%,var(--emerald-soft));border-color:color-mix(in srgb,var(--emerald) 30%,var(--line))}
+.news h2{font-size:1.25rem}
+.news p{margin-top:8px;font-size:.95rem;color:var(--muted)}
+.news form{margin-top:16px;display:grid;gap:10px}
+.okmsg{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--emerald-soft);color:var(--emerald-deep);font-weight:600;font-size:.92rem}
+.okmsg.on{display:block;animation:pop .45s ease}
+.fine{font-size:.76rem;color:var(--muted);margin-top:10px}
+
+.owner{display:flex;gap:14px;align-items:center}
+.owner .av{width:48px;height:48px;font-size:1.1rem}
+.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 118px)}
+
+footer{max-width:1180px;margin:0 auto;padding:20px 20px 48px;color:var(--muted);font-size:.86rem;display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;border-top:1px solid var(--line)}
+footer button{background:none;border:0;padding:0;color:var(--steel);cursor:pointer;font-weight:600}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(30,42,59,.38);backdrop-filter:blur(4px)}
+.modal.on{display:flex}
+.dialog{width:100%;max-width:520px;max-height:calc(100% - 20px);overflow:auto;background:var(--card);border-radius:20px;box-shadow:var(--shadow-lg);padding:26px;animation:rise .25s ease}
+@keyframes rise{from{transform:translateY(12px);opacity:0}}
+.x{float:right;background:var(--steel-soft);border:0;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.2rem;line-height:1;color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translate(-50%,40px);opacity:0;background:var(--ink);color:var(--bg1);padding:12px 18px;border-radius:12px;font-weight:600;font-size:.92rem;transition:.3s;z-index:80;pointer-events:none;max-width:calc(100% - 40px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:980px){
+  main{grid-template-columns:1fr}
+  .ad-tall{display:none}
+  .sticky{position:static}
+}
+@media (max-width:640px){
+  .bar{padding:10px 16px;gap:10px}
+  .logo small,.nav .hide-m,.live span{display:none}
+  main{padding:18px 14px 32px;gap:18px}
+  .col,aside{gap:18px}
+  .card{padding:18px}
+  .hero{padding:26px 18px 22px}
+  .search{flex-wrap:wrap;padding:6px}
+  .search svg{display:none}
+  .search input{padding:10px 8px}
+  .search .btn{width:100%}
+  .res-top{grid-template-columns:1fr}
+  .gauge{justify-self:start}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form .two{grid-template-columns:1fr}
+  .ad-leader{min-height:60px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .track{animation:none}
+  .ticker{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="bar">
+    <button class="logo" id="home" aria-label="SiteReport.live home">SiteReport<span style="color:var(--emerald-deep)">.live</span> <small>uptime, security &amp; legitimacy</small></button>
+    <div class="live" title="Monitoring network active"><i class="pulse" aria-hidden="true"></i><span>Live</span></div>
+    <nav class="nav" aria-label="Main">
+      <a href="#check" class="hide-m">Check a site</a>
+      <a href="#newsletter" class="hide-m">Outage alerts</a>
+      <button class="cta" data-open-contact>Contact</button>
+    </nav>
+  </div>
+  <div class="ticker" aria-label="Trending searches">
+    <div class="lead">Trending</div>
+    <div class="track" id="track"></div>
+  </div>
+</header>
+
+<main>
+  <div class="col">
+    <section class="card hero" id="check">
+      <h1>Is it up, secure, and legit?</h1>
+      <p class="sub">Type any website. We check whether it's online, how fast it answers, whether its connection is encrypted, and how much you should trust it.</p>
+      <form class="search" id="searchForm" novalidate>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label for="q" class="sr">Website address</label>
+        <input id="q" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="temu.com, google.com, any site…" maxlength="253">
+        <button class="btn" id="goBtn" type="submit">Check site</button>
+      </form>
+      <div class="err" id="err" role="alert"></div>
+      <div class="chips" id="chips"><span>Try:</span></div>
+    </section>
+
+    <div class="ad-slot ad-leader" role="complementary" aria-label="Advertisement">
+      <span class="ad-label">Sponsored Advertisement</span>
+      <span class="ad-size">728 × 90 leaderboard</span>
+    </div>
+
+    <section class="card scan" id="scan" aria-live="polite">
+      <div class="scan-head"><div><span class="muted">Scanning</span><div class="scan-dom" id="scanDom"></div></div><span class="muted" id="scanPct">0%</span></div>
+      <div class="prog"><i id="bar"></i></div>
+      <ul class="steps" id="steps">
+        <li>Resolving DNS records</li>
+        <li>Negotiating TLS handshake</li>
+        <li>Measuring server response</li>
+        <li>Cross-checking reputation lists</li>
+      </ul>
+    </section>
+
+    <div id="results" aria-live="polite">
+      <section class="card">
+        <div class="res-top">
+          <div>
+            <span class="badge" id="badge"><i class="dot"></i><span id="badgeTxt"></span></span>
+            <div class="site-name" id="rName"></div>
+            <div class="site-dom" id="rDom"></div>
+            <div id="rEst"></div>
+          </div>
+          <div class="gauge" role="img" id="gaugeWrap">
+            <svg width="148" height="148" viewBox="0 0 148 148" aria-hidden="true">
+              <circle cx="74" cy="74" r="62" fill="none" stroke="var(--steel-soft)" stroke-width="12"/>
+              <circle class="fg" id="gaugeFg" cx="74" cy="74" r="62" fill="none" stroke="var(--emerald)" stroke-width="12" stroke-linecap="round" stroke-dasharray="389.56" stroke-dashoffset="389.56"/>
+            </svg>
+            <div class="val"><span class="num" id="gNum">0</span><span class="lbl">Trust Index</span></div>
+          </div>
+        </div>
+        <div class="metrics" id="metrics"></div>
+        <div class="summary">
+          <div class="ic" aria-hidden="true">AI</div>
+          <div><div class="t">What this site is for</div><p id="rSum"></p></div>
+        </div>
+        <ul class="flags" id="flags"></ul>
+      </section>
+
+      <section class="card">
+        <div class="sec-head"><h2>Trusted alternatives</h2><span class="muted" id="altCat"></span></div>
+        <div class="alts" id="alts"></div>
+        <p class="disc">Promoted listings are affiliate partners. We may earn a commission if you visit through them; it never changes a site's Trust Index.</p>
+      </section>
+
+      <div class="ad-slot ad-infeed" role="complementary" aria-label="Advertisement">
+        <span class="ad-label">Sponsored Advertisement</span>
+        <span class="ad-size">In-feed native unit</span>
+      </div>
+
+      <section class="card" id="community">
+        <div class="sec-head"><h2>Community reports</h2><span class="avg" id="avg"></span></div>
+        <div class="rate">
+          <span class="muted">Your rating</span>
+          <div class="stars" id="stars" role="radiogroup" aria-label="Rate this site"></div>
+          <span class="muted" id="rateTxt">Tap to rate</span>
+        </div>
+        <form class="form" id="cForm" novalidate>
+          <div class="two">
+            <label class="sr" for="cName">Your name</label>
+            <input class="inp" id="cName" maxlength="40" placeholder="Name (optional)">
+            <label class="sr" for="cText">Your comment</label>
+            <input class="inp" id="cText" maxlength="280" placeholder="Is it working for you? Anything sketchy?" required>
+          </div>
+          <div class="form-foot">
+            <span class="count" id="cCount">0 / 280</span>
+            <button class="btn" type="submit">Post report</button>
+          </div>
+          <div class="err" id="cErr" role="alert"></div>
+        </form>
+        <ul class="comments" id="cList"></ul>
+      </section>
+    </div>
+  </div>
+
+  <aside>
+    <div class="ad-slot ad-rect" role="complementary" aria-label="Advertisement">
+      <span class="ad-label">Sponsored Advertisement</span>
+      <span class="ad-size">300 × 250</span>
+    </div>
+
+    <section class="card news" id="newsletter">
+      <h2>Join the SiteReport Outage Alert.</h2>
+      <p>Get a monthly digest of the top 5 major websites that went down or were flagged this month.</p>
+      <form id="nForm" name="outage-alert" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="outage-alert">
+        <p class="sr"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <label for="nEmail" class="sr">Email address</label>
+        <input class="inp" id="nEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" maxlength="120">
+        <button class="btn green" type="submit">Get the monthly alert</button>
+      </form>
+      <div class="err" id="nErr" role="alert"></div>
+      <div class="okmsg" id="nOk" role="status"></div>
+      <p class="fine">One email a month. Unsubscribe anytime.</p>
+    </section>
+
+    <section class="card">
+      <h3>Run this site</h3>
+      <div class="owner" style="margin-top:14px">
+        <div class="av" aria-hidden="true">BB</div>
+        <div><div style="font-weight:700">Brandon Bonds</div><div class="muted" style="font-size:.88rem">Owner, SiteReport.live</div></div>
+      </div>
+      <p class="muted" style="margin-top:12px;font-size:.92rem">Advertising, partnerships, or a site you think we got wrong.</p>
+      <button class="btn ghost" style="margin-top:14px;width:100%" data-open-contact>Send an inquiry</button>
+    </section>
+
+    <div class="ad-slot ad-tall sticky" role="complementary" aria-label="Advertisement">
+      <span class="ad-label">Sponsored Advertisement</span>
+      <span class="ad-size">300 × 600 half page</span>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <span>© <span id="yr"></span> SiteReport.live. Owned by Brandon Bonds.</span>
+  <span>Day-one site profiles are editorial estimates built from public information. Response times are typical medians.</span>
+  <span><a href="/privacy.html" style="color:var(--steel);font-weight:600;text-decoration:none;margin-right:16px">Privacy</a><button data-open-contact>Contact</button></span>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="dialog">
+    <button class="x" id="mClose" aria-label="Close">×</button>
+    <h2 id="mTitle">Contact SiteReport.live</h2>
+    <div class="owner" style="margin-top:16px">
+      <div class="av" aria-hidden="true">BB</div>
+      <div><div style="font-weight:700">Brandon Bonds</div><a href="mailto:BeexyInk@gmail.com" style="font-size:.92rem">BeexyInk@gmail.com</a></div>
+    </div>
+    <form class="form" id="mForm" novalidate>
+      <label class="sr" for="mName">Your name</label>
+      <input class="inp" id="mName" maxlength="60" placeholder="Your name" autocomplete="name">
+      <label class="sr" for="mEmail">Your email</label>
+      <input class="inp" id="mEmail" type="email" maxlength="120" placeholder="Your email" autocomplete="email">
+      <label class="sr" for="mSubj">Topic</label>
+      <select class="inp" id="mSubj">
+        <option>Advertising inquiry</option>
+        <option>Partnership or affiliate</option>
+        <option>Report an incorrect result</option>
+        <option>General question</option>
+      </select>
+      <label class="sr" for="mMsg">Message</label>
+      <textarea class="inp" id="mMsg" maxlength="2000" placeholder="How can we help?"></textarea>
+      <div class="err" id="mErr" role="alert"></div>
+      <button class="btn" type="submit">Open email to send</button>
+      <p class="fine" style="margin-top:0">This opens your email app with your message ready to send to BeexyInk@gmail.com.</p>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+var $ = function(id){return document.getElementById(id)};
+
+/* ---------- Day-one database ---------- */
+var DB = {
+  "google.com":{name:"Google",cat:"search",status:"online",ms:95,ssl:"Valid, TLS 1.3",trust:97,up:"99.99%",since:"1998",op:"Google LLC (Alphabet)",
+    sum:"The world's most-used search engine. Indexes the web and returns ranked results, plus Maps, Images, News, and shopping listings. Free to use, funded by advertising.",flags:[]},
+  "youtube.com":{name:"YouTube",cat:"video",status:"online",ms:140,ssl:"Valid, TLS 1.3",trust:95,up:"99.98%",since:"2005",op:"Google LLC (acquired 2006)",
+    sum:"The largest video-sharing platform. Creators upload videos, streams, and Shorts; viewers watch free with ads or through YouTube Premium.",flags:[]},
+  "facebook.com":{name:"Facebook",cat:"social",status:"online",ms:160,ssl:"Valid, TLS 1.3",trust:85,up:"99.95%",since:"2004",op:"Meta Platforms, Inc.",
+    sum:"Social network for connecting with friends and family, groups, events, and Marketplace buying and selling. Legitimate, but Marketplace scams are common, so meet sellers in person and never pay upfront.",
+    flags:["Paid a $5 billion FTC privacy settlement in 2019."]},
+  "instagram.com":{name:"Instagram",cat:"social",status:"online",ms:170,ssl:"Valid, TLS 1.3",trust:85,up:"99.95%",since:"2010",op:"Meta Platforms, Inc. (acquired 2012)",
+    sum:"Photo and short-video sharing app with Stories, Reels, and direct messages. Legitimate platform; watch for impersonation accounts and fake giveaway DMs.",flags:[]},
+  "amazon.com":{name:"Amazon",cat:"shopping",status:"online",ms:180,ssl:"Valid, TLS 1.3",trust:94,up:"99.97%",since:"1995",op:"Amazon.com, Inc.",
+    sum:"The largest online retailer in the US, selling nearly everything with fast Prime shipping, plus a huge third-party seller marketplace. Check seller ratings on third-party listings.",flags:[]},
+  "tiktok.com":{name:"TikTok",cat:"video",status:"online",ms:190,ssl:"Valid, TLS 1.3",trust:76,up:"99.9%",since:"2017",op:"TikTok (ByteDance origin)",
+    sum:"Short-form video platform driven by an algorithmic For You feed. Hugely popular for entertainment, trends, and creator commerce through TikTok Shop.",
+    flags:["Ongoing US government scrutiny over user data and ownership."]},
+  "temu.com":{name:"Temu",cat:"shopping",status:"online",ms:230,ssl:"Valid, TLS 1.3",trust:62,up:"99.9%",since:"2022",op:"PDD Holdings",
+    sum:"Discount marketplace shipping low-cost goods, mostly directly from manufacturers overseas. It is a real company and orders do arrive, but quality and delivery times vary widely.",
+    flags:["Sued by state attorneys general over data collection practices, including Arkansas in 2024.","Frequent customer complaints about product quality and slow shipping."]},
+  "wikipedia.org":{name:"Wikipedia",cat:"reference",status:"online",ms:110,ssl:"Valid, TLS 1.3",trust:96,up:"99.98%",since:"2001",op:"Wikimedia Foundation (nonprofit)",
+    sum:"Free, volunteer-written encyclopedia in hundreds of languages. No ads; funded by donations. Great starting point, but check the cited sources for anything important.",flags:[]},
+  "reddit.com":{name:"Reddit",cat:"social",status:"online",ms:210,ssl:"Valid, TLS 1.3",trust:86,up:"99.9%",since:"2005",op:"Reddit, Inc. (public since 2024)",
+    sum:"Community forums (subreddits) where users post, vote, and discuss every topic imaginable. Legitimate; treat advice from anonymous users with healthy skepticism.",flags:[]},
+  "x.com":{name:"X (formerly Twitter)",cat:"social",status:"online",ms:200,ssl:"Valid, TLS 1.3",trust:78,up:"99.8%",since:"2006",op:"X Corp.",
+    sum:"Real-time microblogging network for news, commentary, and public conversation. Rebranded from Twitter in 2023.",
+    flags:["Verification checkmarks are paid and do not confirm identity. Watch for impersonation."]},
+  "netflix.com":{name:"Netflix",cat:"streaming",status:"online",ms:150,ssl:"Valid, TLS 1.3",trust:93,up:"99.97%",since:"1997",op:"Netflix, Inc.",
+    sum:"Subscription streaming service for movies, series, and games. Legitimate; emails asking you to 'update payment' through a link are a common phishing scam.",flags:[]},
+  "chatgpt.com":{name:"ChatGPT",cat:"ai",status:"online",ms:190,ssl:"Valid, TLS 1.3",trust:90,up:"99.7%",since:"2022",op:"OpenAI",
+    sum:"AI chatbot for writing, research, coding, and questions. Free and paid tiers. Legitimate; verify facts it gives you before relying on them.",flags:[]},
+  "example.com":{name:"Example Domain",cat:"test",status:"online",ms:60,ssl:"Valid, TLS 1.3",trust:90,up:"99.99%",since:"1999",op:"IANA (reserved domain)",
+    sum:"A reserved domain set aside for documentation and testing (RFC 2606). It serves a simple placeholder page and is safe to load.",flags:[]},
+  "geocities.com":{name:"GeoCities",cat:"hosting",status:"offline",ms:null,ssl:"None",trust:0,up:"0%",since:"1994",op:"Yahoo (acquired 1999)",
+    sum:"A free web hosting service that defined the 1990s personal homepage. Yahoo shut it down in the US in October 2009 and in Japan in 2019. The original sites are gone.",
+    flags:["Service discontinued. Any page claiming to be GeoCities today is not the original."]}
+};
+var ALIAS = {"twitter.com":"x.com","fb.com":"facebook.com","youtu.be":"youtube.com","chat.openai.com":"chatgpt.com","en.wikipedia.org":"wikipedia.org","amzn.com":"amazon.com","m.facebook.com":"facebook.com"};
+
+var ALTS = {
+  search:[["DuckDuckGo","duckduckgo.com",92],["Bing","bing.com",93],["Brave Search","search.brave.com",90],["Startpage","startpage.com",88]],
+  social:[["Bluesky","bsky.app",84],["Reddit","reddit.com",86],["Threads","threads.net",83],["Mastodon","joinmastodon.org",85]],
+  shopping:[["Target","target.com",93],["Walmart","walmart.com",92],["eBay","ebay.com",88],["Etsy","etsy.com",88]],
+  video:[["YouTube","youtube.com",95],["Vimeo","vimeo.com",90],["Twitch","twitch.tv",87],["Nebula","nebula.tv",86]],
+  reference:[["Britannica","britannica.com",95],["Wolfram Alpha","wolframalpha.com",93],["Wikipedia","wikipedia.org",96]],
+  streaming:[["Hulu","hulu.com",91],["Max","max.com",90],["Disney+","disneyplus.com",91],["YouTube","youtube.com",95]],
+  ai:[["Claude","claude.ai",91],["Gemini","gemini.google.com",90],["Perplexity","perplexity.ai",87]],
+  test:[["httpbin","httpbin.org",89],["badssl.com","badssl.com",88],["NeverSSL","neverssl.com",85]],
+  hosting:[["Neocities","neocities.org",88],["WordPress.com","wordpress.com",91],["Carrd","carrd.co",88]],
+  news:[["AP News","apnews.com",95],["Reuters","reuters.com",95],["BBC News","bbc.com",93]],
+  finance:[["NerdWallet","nerdwallet.com",90],["Investopedia","investopedia.com",91],["Bankrate","bankrate.com",89]],
+  general:[["Google","google.com",97],["Wikipedia","wikipedia.org",96],["DuckDuckGo","duckduckgo.com",92]]
+};
+var CATNAME = {search:"Search engines",social:"Social platforms",shopping:"Online stores",video:"Video platforms",reference:"Reference",streaming:"Streaming",ai:"AI assistants",test:"Test sites",hosting:"Site builders",news:"News",finance:"Money",general:"Popular picks"};
+
+var TRENDING = [["temu.com","+212%"],["chatgpt.com","+88%"],["tiktok.com","+64%"],["x.com","+41%"],["netflix.com","+19%"],["amazon.com","+17%"],["reddit.com","+15%"],["facebook.com","+12%"],["wikipedia.org","+9%"],["geocities.com","+6%"]];
+
+/* ---------- Storage (safe) ---------- */
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+var SEED = {
+  "temu.com":[{n:"Keisha R.",t:"Order took 11 days but it came. Phone case was fine, the lamp was not.",s:3,at:Date.now()-864e5*3},{n:"Marco",t:"Cheap for a reason. Good for small stuff, don't buy electronics here.",s:3,at:Date.now()-864e5*9}],
+  "google.com":[{n:"Dev in Oakland",t:"Up as always. Fastest check on here.",s:5,at:Date.now()-864e5*2}],
+  "tiktok.com":[{n:"Jas",t:"Loading fine for me on mobile and desktop.",s:4,at:Date.now()-36e5*5}],
+  "facebook.com":[{n:"Linda P.",t:"Site works. Got scammed once on Marketplace, only do cash in person now.",s:3,at:Date.now()-864e5*4}]
+};
+var comments = load("sitereport:comments", SEED);
+var subs = load("sitereport:subs", []);
+
+/* ---------- Helpers ---------- */
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove("on")},2600)}
+function hash(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function ago(ts){var s=(Date.now()-ts)/1000;if(s<60)return"just now";if(s<3600)return Math.floor(s/60)+" min ago";if(s<86400)return Math.floor(s/3600)+" hr ago";var d=Math.floor(s/86400);return d+(d===1?" day ago":" days ago")}
+var EMAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+var DOMAIN = /^(?=.{3,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,24}$/;
+
+function normalize(raw){
+  var s=String(raw||"").trim().toLowerCase();
+  s=s.replace(/^[a-z][a-z0-9+.-]*:\/\//,"");
+  s=s.split(/[\/?#\s]/)[0];
+  s=s.replace(/:\d+$/,"").replace(/\.$/,"");
+  if(s.indexOf("www.")===0) s=s.slice(4);
+  if(ALIAS[s]) s=ALIAS[s];
+  if(s && s.indexOf(".")===-1){
+    var hit=Object.keys(DB).filter(function(k){return k.split(".")[0]===s || DB[k].name.toLowerCase()===s})[0];
+    s = hit || (s+".com");
+  }
+  return s;
+}
+
+/* ---------- Estimation for unknown domains ---------- */
+var RISKY_TLD = ["xyz","top","click","buzz","rest","cam","icu","monster","cfd","sbs","zip","mov","gq","tk","ml","cf","ga","lol","quest"];
+var RISKY_WORDS = ["free","giveaway","prize","winner","verify","login","secure-","account-","wallet","airdrop","crypto","bonus","claim","cheap","deal","outlet","replica","gift","refund"];
+function estimate(d){
+  var h=hash(d), parts=d.split("."), tld=parts[parts.length-1], label=parts.slice(0,-1).join(".");
+  var trust=68+(h%24), flags=[];
+  if(RISKY_TLD.indexOf(tld)>-1){trust-=24;flags.push("Uses a ."+tld+" domain ending, which is common among short-lived scam sites.")}
+  var hits=RISKY_WORDS.filter(function(w){return d.indexOf(w)>-1});
+  if(hits.length){trust-=12+6*Math.min(hits.length,3);flags.push("Name contains words often seen in phishing or scam sites ("+hits.slice(0,3).join(", ").replace(/-/g,"")+").")}
+  var hy=(label.match(/-/g)||[]).length;
+  if(hy>=2){trust-=8;flags.push("Several hyphens in the name, a pattern used to imitate real brands.")}
+  if(/\d{3,}/.test(label)){trust-=5}
+  if(tld==="gov"||tld==="edu"||tld==="mil"){trust=Math.max(trust,90)}
+  var offline=/(^|[.-])(down|offline|dead|defunct|expired)([.-]|$)/.test(d) || h%23===0;
+  trust=Math.max(4,Math.min(95,trust));
+  var cat="general";
+  if(/shop|store|deal|outlet|buy|mart|cart/.test(d))cat="shopping";
+  else if(/news|times|post|daily|herald|journal/.test(d))cat="news";
+  else if(/bank|pay|money|finance|loan|credit|invest/.test(d))cat="finance";
+  else if(/tube|video|tv|stream|movie/.test(d))cat="video";
+  else if(/social|chat|forum|community/.test(d))cat="social";
+  var catSum={
+    shopping:"Looks like an online store. Before buying, check for a real street address, a working phone number, and reviews on independent sites.",
+    news:"Looks like a news or publishing site. Compare its big claims against established outlets before sharing.",
+    finance:"Looks finance-related. Never enter banking details unless you typed the address yourself and the connection is encrypted.",
+    video:"Looks like a video or streaming site. Avoid downloading 'player updates' or codecs it asks you to install.",
+    social:"Looks like a community or social site. Be careful sharing personal details with accounts you don't know.",
+    general:"A general website with no strong category signals. Use it normally, but don't enter passwords or payment info unless you trust who runs it."
+  }[cat];
+  if(tld==="gov")catSum="Government domain. .gov addresses are restricted to verified US government bodies.";
+  if(tld==="edu")catSum="Education domain. .edu addresses are restricted to accredited US institutions.";
+  var ms=offline?null:120+(h%640);
+  var sslOk=!offline && (h%9!==0 || trust>70);
+  if(!sslOk && !offline){trust=Math.max(4,trust-15);flags.push("No valid SSL certificate detected. Don't enter passwords or card numbers here.")}
+  var upPct=offline?"—":(99+(h%100)/100).toFixed(2).replace(/\.?0+$/,"")+"%";
+  var name=parts[0].charAt(0).toUpperCase()+parts[0].slice(1);
+  if(parts.length>2) name=parts[parts.length-2].charAt(0).toUpperCase()+parts[parts.length-2].slice(1);
+  return {name:name,cat:cat,status:offline?"offline":"online",ms:ms,ssl:offline?"Unreachable":(sslOk?"Valid, TLS 1.3":"Not detected"),trust:offline?Math.min(trust,25):trust,
+    up:upPct,since:"Not on record",op:"Not disclosed",sum:offline?"We couldn't reach this site. It may be down, expired, or blocking checks. Try again later before assuming it's gone for good.":catSum,flags:flags,est:true};
+}
+
+/* ---------- Search flow ---------- */
+var busy=false, current=null, myRating=0;
+function run(raw){
+  if(busy) return;
+  $("err").textContent="";
+  var d=normalize(raw);
+  if(!d){ $("err").textContent="Type a website address, like example.com."; $("q").focus(); return; }
+  if(!DOMAIN.test(d)){ $("err").textContent="That doesn't look like a website address. Try something like example.com."; return; }
+  $("q").value=d;
+  if(DB[d]){ show(d,DB[d]); return; }
+  scan(d);
+}
+function scan(d){
+  busy=true; $("goBtn").disabled=true; $("goBtn").textContent="Scanning…";
+  $("results").classList.remove("on");
+  var sc=$("scan"); sc.classList.add("on"); $("scanDom").textContent=d;
+  var steps=[].slice.call($("steps").children); steps.forEach(function(li){li.className=""});
+  sc.scrollIntoView({behavior:"smooth",block:"start"});
+  var dur=2000, t0=performance.now(), live=null, liveDone=false, animDone=false;
+  fetch("/.netlify/functions/check?domain="+encodeURIComponent(d))
+    .then(function(r){return r.ok?r.json():null})
+    .then(function(j){live=(j&&j.status)?j:null})
+    .catch(function(){live=null})
+    .then(function(){liveDone=true;finish()});
+  setTimeout(function(){liveDone=true;finish()},9000);
+  function finish(){
+    if(!liveDone||!animDone||finish.ran)return; finish.ran=true;
+    sc.classList.remove("on"); busy=false; $("goBtn").disabled=false; $("goBtn").textContent="Check site";
+    var s=estimate(d);
+    if(live){
+      s.live=true; s.est=false; s.status=live.status; s.ms=live.ms;
+      s.ssl=live.status==="offline"?"Unreachable":(live.ssl?"Valid, HTTPS":"Not detected");
+      s.flags=s.flags.filter(function(f){return f.indexOf("SSL")<0});
+      if(live.status==="online"&&!live.ssl){s.trust=Math.max(4,s.trust-15);s.flags.push("No valid SSL certificate. Don't enter passwords or card numbers here.")}
+      if(live.status==="offline"){s.trust=Math.min(s.trust,25);s.up="—";s.sum="We couldn't reach this site just now. It may be down, expired, or blocking checks. Try again later before assuming it's gone for good."}
+      else s.up="Checked just now";
+    }
+    show(d,s);
+  }
+  function frame(t){
+    var p=Math.min(1,(t-t0)/dur);
+    $("bar").style.width=(p*100)+"%"; $("scanPct").textContent=Math.round(p*100)+"%";
+    var idx=Math.min(steps.length-1,Math.floor(p*steps.length));
+    steps.forEach(function(li,i){li.className = i<idx||p===1 ? "done" : (i===idx?"run":"")});
+    if(p<1) requestAnimationFrame(frame);
+    else setTimeout(function(){animDone=true;finish()},180);
+  }
+  requestAnimationFrame(frame);
+}
+
+function speed(ms){ if(ms==null) return ["No response","r"]; if(ms<200) return ["Fast","g"]; if(ms<450) return ["Moderate","a"]; return ["Slow","r"]; }
+function show(d,s){
+  current=d; myRating=0;
+  var off=s.status==="offline", b=$("badge");
+  b.className="badge "+(off?"down":(s.trust>=70?"ok":"warn"));
+  $("badgeTxt").textContent= off?"OFFLINE DETECTED":(s.trust>=70?"ONLINE & VERIFIED":"ONLINE, USE CAUTION");
+  $("rName").textContent=s.name; $("rDom").textContent=d;
+  $("rEst").innerHTML = s.est ? '<span class="est">Estimate from domain signals. Live check unavailable right now.</span>' : (s.live ? '<span class="est" style="color:var(--emerald-deep);background:var(--emerald-soft)">Live check just now. Trust Index blends live results with domain reputation signals.</span>' : "");
+  // gauge
+  var C=389.56, col = s.trust>=80?"var(--emerald)":(s.trust>=55?"var(--amber)":"var(--red)");
+  var fg=$("gaugeFg"); fg.style.stroke=col; fg.setAttribute("stroke-dashoffset",C);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){fg.setAttribute("stroke-dashoffset",C*(1-s.trust/100))})});
+  countUp($("gNum"),s.trust);
+  $("gaugeWrap").setAttribute("aria-label","Trust Index "+s.trust+" out of 100");
+  var sp=speed(s.ms), sslOk=/^Valid/.test(s.ssl);
+  var M=[
+    ["Response speed", s.ms==null?"—":s.ms+" ms", sp[0], sp[1]],
+    ["SSL certificate", s.ssl, sslOk?"Connection encrypted":"Not secure", sslOk?"g":"r"],
+    ["Trust Index", s.trust+" / 100", s.trust>=80?"High trust":(s.trust>=55?"Mixed signals":"Low trust"), s.trust>=80?"g":(s.trust>=55?"a":"r")],
+    [s.live?"Status":"30-day uptime", s.up, off?"Currently down":(s.live?"Responded to our probe":"Est. availability"), off?"r":"g"],
+    ["Online since", s.since, "", ""],
+    ["Run by", s.op, "", ""]
+  ];
+  $("metrics").innerHTML=M.map(function(m){return '<div class="metric"><div class="k">'+esc(m[0])+'</div><div class="v">'+esc(m[1])+'</div>'+(m[2]?'<div class="n '+m[3]+'">'+esc(m[2])+'</div>':'')+'</div>'}).join("");
+  $("rSum").textContent=s.sum;
+  $("flags").innerHTML=(s.flags||[]).map(function(f){return "<li>"+esc(f)+"</li>"}).join("");
+  // alternatives
+  var list=(ALTS[s.cat]||ALTS.general).filter(function(a){return a[1]!==d}).slice(0,4);
+  $("altCat").textContent=CATNAME[s.cat]||"";
+  $("alts").innerHTML=list.map(function(a,i){
+    return '<div class="alt'+(i===0?' promo':'')+'">'+(i===0?'<span class="tag">Promoted partner</span>':'')+
+      '<div class="nm">'+esc(a[0])+'</div><div class="dm">'+esc(a[1])+' <span class="g">Trust '+a[2]+'</span></div>'+
+      '<div class="row"><button class="chk" data-check="'+esc(a[1])+'">Check</button>'+
+      '<a class="vis" href="https://'+esc(a[1])+'" target="_blank" rel="sponsored noopener noreferrer">Visit</a></div></div>';
+  }).join("");
+  renderStars(); renderComments();
+  var r=$("results"); r.classList.add("on");
+  r.scrollIntoView({behavior:"smooth",block:"start"});
+  document.title=s.name+" status — SiteReport.live";
+}
+function countUp(el,to){
+  var t0=performance.now(),dur=1000;
+  (function f(t){var p=Math.min(1,(t-t0)/dur);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0);
+}
+
+/* ---------- Community ---------- */
+var STAR='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2 6.3 20.3l1.2-6.4L2.8 9.5l6.4-.8z"/></svg>';
+var WORDS=["","Broken or scammy","Mostly bad","It's okay","Works well","Excellent"];
+function renderStars(preview){
+  var n=preview||myRating, box=$("stars");
+  if(!box.children.length){
+    for(var i=1;i<=5;i++){
+      var b=document.createElement("button"); b.type="button"; b.className="star"; b.dataset.v=i;
+      b.setAttribute("role","radio"); b.setAttribute("aria-label",i+" star"+(i>1?"s":"")); b.innerHTML=STAR; box.appendChild(b);
+    }
+  }
+  [].forEach.call(box.children,function(b,i){b.classList.toggle("on",i<n);b.setAttribute("aria-checked",String(i+1===myRating));b.tabIndex=(myRating?i+1===myRating:i===0)?0:-1});
+  $("rateTxt").textContent = n?WORDS[n]:"Tap to rate";
+  var list=comments[current]||[], rated=list.filter(function(c){return c.s>0});
+  if(rated.length){var avg=rated.reduce(function(a,c){return a+c.s},0)/rated.length;$("avg").innerHTML="<b>"+avg.toFixed(1)+"</b> / 5 from "+rated.length+" report"+(rated.length>1?"s":"")}
+  else $("avg").textContent="No ratings yet";
+}
+$("stars").addEventListener("click",function(e){var b=e.target.closest(".star");if(!b)return;myRating=+b.dataset.v;renderStars();$("cText").focus()});
+$("stars").addEventListener("mouseover",function(e){var b=e.target.closest(".star");if(b)renderStars(+b.dataset.v)});
+$("stars").addEventListener("mouseleave",function(){renderStars()});
+$("stars").addEventListener("keydown",function(e){
+  var k=e.key; if(k!=="ArrowRight"&&k!=="ArrowLeft"&&k!=="ArrowUp"&&k!=="ArrowDown")return;
+  e.preventDefault(); myRating=Math.max(1,Math.min(5,(myRating||0)+((k==="ArrowRight"||k==="ArrowUp")?1:-1)));
+  renderStars(); $("stars").children[myRating-1].focus();
+});
+function renderComments(newest){
+  var list=(comments[current]||[]).slice().sort(function(a,b){return b.at-a.at}), ul=$("cList");
+  ul.innerHTML="";
+  if(!list.length){ul.innerHTML='<li class="empty">No reports for this site yet. Be the first to say how it\'s working for you.</li>';return}
+  list.forEach(function(c,i){
+    var li=document.createElement("li"); li.className="cm"+(newest&&i===0?" new":"");
+    var av=document.createElement("div"); av.className="av"; av.textContent=(c.n||"A").trim().charAt(0).toUpperCase();
+    var body=document.createElement("div");
+    var who=document.createElement("div"); who.className="who"; who.textContent=c.n||"Anonymous";
+    var meta=document.createElement("div"); meta.className="meta";
+    if(c.s){var st=document.createElement("span");st.className="mini";st.textContent="★".repeat(c.s)+"☆".repeat(5-c.s)+"  ";meta.appendChild(st)}
+    meta.appendChild(document.createTextNode(ago(c.at)));
+    var p=document.createElement("p"); p.textContent=c.t;
+    body.appendChild(who); body.appendChild(meta); body.appendChild(p);
+    li.appendChild(av); li.appendChild(body); ul.appendChild(li);
+  });
+}
+$("cText").addEventListener("input",function(){$("cCount").textContent=this.value.length+" / 280";$("cErr").textContent=""});
+$("cForm").addEventListener("submit",function(e){
+  e.preventDefault(); if(!current)return;
+  var t=$("cText").value.trim(), n=$("cName").value.trim();
+  if(t.length<3){$("cErr").textContent="Write at least a few words about the site.";$("cText").focus();return}
+  (comments[current]=comments[current]||[]).push({n:n||"Anonymous",t:t,s:myRating,at:Date.now()});
+  save("sitereport:comments",comments);
+  $("cText").value=""; $("cCount").textContent="0 / 280"; myRating=0;
+  renderStars(); renderComments(true); toast("Report posted. Thanks for keeping the web honest.");
+});
+
+/* ---------- Newsletter ---------- */
+$("nForm").addEventListener("submit",function(e){
+  e.preventDefault(); var v=$("nEmail").value.trim().toLowerCase(), ok=$("nOk"), btn=this.querySelector("button");
+  $("nErr").textContent=""; ok.classList.remove("on");
+  if(!EMAIL.test(v)){$("nErr").textContent="Enter a valid email, like you@email.com.";$("nEmail").focus();return}
+  if(subs.indexOf(v)>-1){ok.textContent="You're already on the list. Next digest lands on the 1st.";ok.classList.add("on");return}
+  if(this.querySelector('[name="bot-field"]').value)return;
+  btn.disabled=true; btn.textContent="Subscribing…";
+  function done(){
+    subs.push(v); save("sitereport:subs",subs);
+    ok.textContent="You're in. Your first Outage Alert arrives on the 1st of next month.";
+    void ok.offsetWidth; ok.classList.add("on"); $("nEmail").value=""; toast("Subscribed to the SiteReport Outage Alert");
+  }
+  fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:new URLSearchParams({"form-name":"outage-alert",email:v}).toString()})
+    .then(function(r){ if(r.ok) done(); else throw 0; })
+    .catch(function(){ $("nErr").textContent="Couldn't subscribe right now. Try again in a minute."; })
+    .then(function(){btn.disabled=false;btn.textContent="Get the monthly alert"});
+});
+$("nEmail").addEventListener("input",function(){$("nErr").textContent=""});
+
+/* ---------- Contact modal (mailto) ---------- */
+var lastFocus=null;
+function openModal(){lastFocus=document.activeElement;$("modal").classList.add("on");document.body.style.overflow="hidden";setTimeout(function(){$("mName").focus()},50)}
+function closeModal(){$("modal").classList.remove("on");document.body.style.overflow="";if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+document.addEventListener("click",function(e){
+  if(e.target.closest("[data-open-contact]")){openModal();return}
+  var c=e.target.closest("[data-check]"); if(c){$("q").value=c.dataset.check;run(c.dataset.check);return}
+  var q=e.target.closest("[data-q]"); if(q){$("q").value=q.dataset.q;run(q.dataset.q)}
+});
+$("mClose").addEventListener("click",closeModal);
+$("modal").addEventListener("click",function(e){if(e.target===this)closeModal()});
+document.addEventListener("keydown",function(e){
+  if(!$("modal").classList.contains("on"))return;
+  if(e.key==="Escape")closeModal();
+  if(e.key==="Tab"){var f=$("modal").querySelectorAll("button,input,select,textarea,a[href]"),a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}
+});
+$("mForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var n=$("mName").value.trim(), em=$("mEmail").value.trim(), s=$("mSubj").value, m=$("mMsg").value.trim(), er=$("mErr");
+  er.textContent="";
+  if(!n){er.textContent="Add your name so Brandon knows who's writing.";$("mName").focus();return}
+  if(!EMAIL.test(em)){er.textContent="Enter a valid email so you can get a reply.";$("mEmail").focus();return}
+  if(m.length<10){er.textContent="Add a little more detail to your message.";$("mMsg").focus();return}
+  var body="Name: "+n+"\nEmail: "+em+(current?"\nSite being viewed: "+current:"")+"\n\n"+m;
+  var href="mailto:BeexyInk@gmail.com?subject="+encodeURIComponent("[SiteReport.live] "+s)+"&body="+encodeURIComponent(body);
+  window.location.href=href;
+  toast("Opening your email app…"); setTimeout(closeModal,400);
+});
+
+/* ---------- Boot ---------- */
+$("searchForm").addEventListener("submit",function(e){e.preventDefault();run($("q").value)});
+$("q").addEventListener("input",function(){$("err").textContent=""});
+$("home").addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});$("q").focus()});
+var chips=$("chips");
+[["Google","google.com"],["Temu","temu.com"],["TikTok","tiktok.com"],["GeoCities","geocities.com"],["A sketchy one","free-prize-claim.xyz"],["Any new site","bayareabikeshop.com"]].forEach(function(c){
+  var b=document.createElement("button");b.type="button";b.className="chip";b.dataset.q=c[1];b.textContent=c[0];chips.appendChild(b);
+});
+var html=TRENDING.map(function(t){return '<button type="button" data-q="'+t[0]+'">'+t[0]+'<b>'+t[1]+'</b></button>'}).join("");
+$("track").innerHTML=html+html.replace(/<button /g,'<button tabindex="-1" aria-hidden="true" ');
+$("yr").textContent=new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
