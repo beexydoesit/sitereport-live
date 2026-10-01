@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="google-site-verification" content="5vPNiwJypMnHqPFJUk3IyrxGg_P1wIOTPrU7oaXGZ6c" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SiteReport.live — Is it up, is it safe, is it legit?</title>
 <meta name="description" content="Check any website's uptime, SSL security, and legitimacy in seconds.">
@@ -557,13 +558,7 @@ var TRENDING = [["temu.com","+212%"],["chatgpt.com","+88%"],["tiktok.com","+64%"
 function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
-var SEED = {
-  "temu.com":[{n:"Keisha R.",t:"Order took 11 days but it came. Phone case was fine, the lamp was not.",s:3,at:Date.now()-864e5*3},{n:"Marco",t:"Cheap for a reason. Good for small stuff, don't buy electronics here.",s:3,at:Date.now()-864e5*9}],
-  "google.com":[{n:"Dev in Oakland",t:"Up as always. Fastest check on here.",s:5,at:Date.now()-864e5*2}],
-  "tiktok.com":[{n:"Jas",t:"Loading fine for me on mobile and desktop.",s:4,at:Date.now()-36e5*5}],
-  "facebook.com":[{n:"Linda P.",t:"Site works. Got scammed once on Marketplace, only do cash in person now.",s:3,at:Date.now()-864e5*4}]
-};
-var comments = load("sitereport:comments", SEED);
+var comments = {};   // loaded per-site from the shared store
 var subs = load("sitereport:subs", []);
 
 /* ---------- Helpers ---------- */
@@ -714,7 +709,7 @@ function show(d,s){
       '<div class="row"><button class="chk" data-check="'+esc(a[1])+'">Check</button>'+
       '<a class="vis" href="https://'+esc(a[1])+'" target="_blank" rel="sponsored noopener noreferrer">Visit</a></div></div>';
   }).join("");
-  renderStars(); renderComments();
+  renderStars(); renderComments(); loadComments(d);
   try{history.replaceState(null,"","?q="+encodeURIComponent(d))}catch(e){}
   remember(d);
   var r=$("results"); r.classList.add("on");
@@ -770,10 +765,25 @@ $("stars").addEventListener("keydown",function(e){
   e.preventDefault(); myRating=Math.max(1,Math.min(5,(myRating||0)+((k==="ArrowRight"||k==="ArrowUp")?1:-1)));
   renderStars(); $("stars").children[myRating-1].focus();
 });
+function loadComments(d){
+  $("cList").innerHTML='<li class="empty">Loading reports…</li>';
+  fetch("/.netlify/functions/comments?domain="+encodeURIComponent(d))
+    .then(function(r){return r.ok?r.json():null})
+    .then(function(j){
+      if(current!==d) return;                 // user moved on
+      comments[d]=(j&&j.comments)||[];
+      renderStars(); renderComments();
+    })
+    .catch(function(){
+      if(current!==d) return;
+      comments[d]=comments[d]||[];
+      $("cList").innerHTML='<li class="empty">Community reports are unavailable right now. Try again in a moment.</li>';
+    });
+}
 function renderComments(newest){
   var list=(comments[current]||[]).slice().sort(function(a,b){return b.at-a.at}), ul=$("cList");
   ul.innerHTML="";
-  if(!list.length){ul.innerHTML='<li class="empty">No reports for this site yet. Be the first to say how it\'s working for you.</li>';return}
+  if(!list.length){ul.innerHTML='<li class="empty">No reports yet. Be the first to say how this site is working for you.</li>';return}
   list.forEach(function(c,i){
     var li=document.createElement("li"); li.className="cm"+(newest&&i===0?" new":"");
     var av=document.createElement("div"); av.className="av"; av.textContent=(c.n||"A").trim().charAt(0).toUpperCase();
@@ -790,12 +800,24 @@ function renderComments(newest){
 $("cText").addEventListener("input",function(){$("cCount").textContent=this.value.length+" / 280";$("cErr").textContent=""});
 $("cForm").addEventListener("submit",function(e){
   e.preventDefault(); if(!current)return;
-  var t=$("cText").value.trim(), n=$("cName").value.trim();
+  var t=$("cText").value.trim(), n=$("cName").value.trim(), btn=this.querySelector("button");
+  $("cErr").textContent="";
   if(t.length<3){$("cErr").textContent="Write at least a few words about the site.";$("cText").focus();return}
-  (comments[current]=comments[current]||[]).push({n:n||"Anonymous",t:t,s:myRating,at:Date.now()});
-  save("sitereport:comments",comments);
-  $("cText").value=""; $("cCount").textContent="0 / 280"; myRating=0;
-  renderStars(); renderComments(true); toast("Report posted. Thanks for keeping the web honest.");
+  btn.disabled=true; btn.textContent="Posting…";
+  var d=current;
+  fetch("/.netlify/functions/comments",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({domain:d,name:n,text:t,stars:myRating})})
+    .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
+    .then(function(res){
+      if(!res.ok) throw new Error(res.j && res.j.error==="links are not allowed"
+        ? "Links aren't allowed in reports." : "Couldn't post that. Try again in a moment.");
+      (comments[d]=comments[d]||[]).push(res.j.comment);
+      $("cText").value=""; $("cCount").textContent="0 / 280"; myRating=0;
+      if(current===d){renderStars(); renderComments(true)}
+      toast("Report posted. Thanks for keeping the web honest.");
+    })
+    .catch(function(err){$("cErr").textContent=err.message||"Couldn't post that. Try again in a moment."})
+    .then(function(){btn.disabled=false;btn.textContent="Post report"});
 });
 
 /* ---------- Newsletter ---------- */
