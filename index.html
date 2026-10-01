@@ -12,10 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!--
-  ADSENSE: when approved, add this once in <head> and swap each .ad-slot's inner placeholder for an <ins class="adsbygoogle"> unit.
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
--->
+<!-- ADSENSE: paste the AdSense script tag here when approved. Ad slots were removed until then. -->
 <style>
 :root{
   --bg1:#F5F7FA; --bg2:#E4E8F0; --card:#FFFFFF; --card-2:#F8FAFC;
@@ -120,16 +117,7 @@ p{margin:0}
 .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 13px;font-size:.86rem;cursor:pointer;color:var(--ink)}
 .chip:hover{border-color:var(--steel);color:var(--steel)}
 
-/* Ads */
-.ad-slot{border:1px dashed color-mix(in srgb,var(--muted) 45%,transparent);border-radius:14px;background:
-  repeating-linear-gradient(135deg,transparent 0 12px,color-mix(in srgb,var(--line) 45%,transparent) 12px 13px),var(--card-2);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:.8rem;gap:4px;padding:10px}
-.ad-slot .ad-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
-.ad-slot .ad-size{font-size:.95rem;font-weight:600;color:var(--ink);opacity:.55}
-.ad-leader{min-height:96px}
-.ad-rect{min-height:250px}
-.ad-tall{min-height:600px}
-.ad-infeed{min-height:110px}
+
 
 /* Scanner */
 .scan{display:none}
@@ -245,7 +233,6 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
 
 @media (max-width:980px){
   main{grid-template-columns:1fr}
-  .ad-tall{display:none}
   .sticky{position:static}
 }
 @media (max-width:640px){
@@ -263,7 +250,6 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
   .gauge{justify-self:start}
   .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
   .form .two{grid-template-columns:1fr}
-  .ad-leader{min-height:60px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -271,6 +257,16 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
   .ticker{overflow-x:auto}
 }
 </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","name":"SiteReport.live","url":"https://sitereport.live/","description":"Check any website's uptime, SSL security and legitimacy in seconds.",
+ "potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://sitereport.live/?q={search_term_string}"},"query-input":"required name=search_term_string"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I know if a website is down for everyone or just me?","acceptedAnswer":{"@type":"Answer","text":"SiteReport.live checks the site from our server rather than your connection. If we reach it and you cannot, the problem is on your end: your network, your DNS, or a browser extension."}},
+{"@type":"Question","name":"What makes a website look sketchy?","acceptedAnswer":{"@type":"Answer","text":"Brand-new domains, unusual endings like .xyz or .top, prices far below everyone else, no street address or phone number, and payment only by gift card, wire or crypto."}},
+{"@type":"Question","name":"What does the Trust Index mean?","acceptedAnswer":{"@type":"Answer","text":"A 0 to 100 score combining a live check with what is publicly known about who runs the site, how long it has existed, and its record."}},
+{"@type":"Question","name":"Is SiteReport.live free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every check is free and no account is required."}}]}]}
+</script>
 </head>
 <body>
 
@@ -303,13 +299,8 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
       </form>
       <div class="err" id="err" role="alert"></div>
       <div class="chips" id="chips"><span>Try:</span></div>
+      <div class="chips" id="recent"></div>
     </section>
-
-    <div class="ad-slot ad-leader" role="complementary" aria-label="Advertisement">
-      <span class="ad-label">Sponsored Advertisement</span>
-      <span class="ad-size">728 × 90 leaderboard</span>
-    </div>
-
     <section class="card scan" id="scan" aria-live="polite">
       <div class="scan-head"><div><span class="muted">Scanning</span><div class="scan-dom" id="scanDom"></div></div><span class="muted" id="scanPct">0%</span></div>
       <div class="prog"><i id="bar"></i></div>
@@ -329,6 +320,7 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
             <div class="site-name" id="rName"></div>
             <div class="site-dom" id="rDom"></div>
             <div id="rEst"></div>
+            <button class="btn ghost" id="share" style="margin-top:14px;padding:8px 14px;font-size:.88rem">Share this report</button>
           </div>
           <div class="gauge" role="img" id="gaugeWrap">
             <svg width="148" height="148" viewBox="0 0 148 148" aria-hidden="true">
@@ -351,12 +343,6 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
         <div class="alts" id="alts"></div>
         <p class="disc">Promoted listings are affiliate partners. We may earn a commission if you visit through them; it never changes a site's Trust Index.</p>
       </section>
-
-      <div class="ad-slot ad-infeed" role="complementary" aria-label="Advertisement">
-        <span class="ad-label">Sponsored Advertisement</span>
-        <span class="ad-size">In-feed native unit</span>
-      </div>
-
       <section class="card" id="community">
         <div class="sec-head"><h2>Community reports</h2><span class="avg" id="avg"></span></div>
         <div class="rate">
@@ -380,14 +366,26 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
         <ul class="comments" id="cList"></ul>
       </section>
     </div>
+
+    <section class="card" id="faq">
+      <h2>Questions people ask</h2>
+      <div style="margin-top:14px;display:grid;gap:16px">
+        <div><h3>How do I know if a website is down for everyone or just me?</h3><p class="muted" style="margin-top:4px">Type the address above. We check it from our server, not your connection. If we reach it and you can't, the problem is on your end: your network, your DNS, or a browser extension.</p></div>
+        <div><h3>What makes a website look sketchy?</h3><p class="muted" style="margin-top:4px">Brand-new domains, unusual endings like .xyz or .top, prices far below everyone else, no street address or phone number, and payment only by gift card, wire or crypto. Any one of those is a reason to slow down.</p></div>
+        <div><h3>What does the Trust Index mean?</h3><p class="muted" style="margin-top:4px">A 0 to 100 score combining our live check with what's publicly known about who runs the site, how long it has existed, and its record. It's guidance, not a guarantee.</p></div>
+        <div><h3>Is SiteReport.live free?</h3><p class="muted" style="margin-top:4px">Yes. Every check is free and no account is required.</p></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Popular status pages</h2>
+      <p class="muted" style="margin-top:6px;font-size:.93rem">Live status and safety reports for the web's most-checked sites.</p>
+      <div class="chips" id="popular" style="margin-top:14px"></div>
+      <p style="margin-top:14px"><a href="/sites.html" style="font-weight:600">See all tracked sites</a></p>
+    </section>
   </div>
 
   <aside>
-    <div class="ad-slot ad-rect" role="complementary" aria-label="Advertisement">
-      <span class="ad-label">Sponsored Advertisement</span>
-      <span class="ad-size">300 × 250</span>
-    </div>
-
     <section class="card news" id="newsletter">
       <h2>Join the SiteReport Outage Alert.</h2>
       <p>Get a monthly digest of the top 5 major websites that went down or were flagged this month.</p>
@@ -412,11 +410,6 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
       <p class="muted" style="margin-top:12px;font-size:.92rem">Advertising, partnerships, or a site you think we got wrong.</p>
       <button class="btn ghost" style="margin-top:14px;width:100%" data-open-contact>Send an inquiry</button>
     </section>
-
-    <div class="ad-slot ad-tall sticky" role="complementary" aria-label="Advertisement">
-      <span class="ad-label">Sponsored Advertisement</span>
-      <span class="ad-size">300 × 600 half page</span>
-    </div>
   </aside>
 </main>
 
@@ -461,42 +454,82 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
 (function(){
 "use strict";
 var $ = function(id){return document.getElementById(id)};
+/* Newsletter: leave blank to use Netlify Forms. To use Formspree instead,
+   paste your endpoint here, e.g. "https://formspree.io/f/abcdwxyz" */
+var NEWSLETTER_ENDPOINT = "";
 
 /* ---------- Day-one database ---------- */
 var DB = {
   "google.com":{name:"Google",cat:"search",status:"online",ms:95,ssl:"Valid, TLS 1.3",trust:97,up:"99.99%",since:"1998",op:"Google LLC (Alphabet)",
-    sum:"The world's most-used search engine. Indexes the web and returns ranked results, plus Maps, Images, News, and shopping listings. Free to use, funded by advertising.",flags:[]},
-  "youtube.com":{name:"YouTube",cat:"video",status:"online",ms:140,ssl:"Valid, TLS 1.3",trust:95,up:"99.98%",since:"2005",op:"Google LLC (acquired 2006)",
-    sum:"The largest video-sharing platform. Creators upload videos, streams, and Shorts; viewers watch free with ads or through YouTube Premium.",flags:[]},
-  "facebook.com":{name:"Facebook",cat:"social",status:"online",ms:160,ssl:"Valid, TLS 1.3",trust:85,up:"99.95%",since:"2004",op:"Meta Platforms, Inc.",
-    sum:"Social network for connecting with friends and family, groups, events, and Marketplace buying and selling. Legitimate, but Marketplace scams are common, so meet sellers in person and never pay upfront.",
-    flags:["Paid a $5 billion FTC privacy settlement in 2019."]},
-  "instagram.com":{name:"Instagram",cat:"social",status:"online",ms:170,ssl:"Valid, TLS 1.3",trust:85,up:"99.95%",since:"2010",op:"Meta Platforms, Inc. (acquired 2012)",
-    sum:"Photo and short-video sharing app with Stories, Reels, and direct messages. Legitimate platform; watch for impersonation accounts and fake giveaway DMs.",flags:[]},
-  "amazon.com":{name:"Amazon",cat:"shopping",status:"online",ms:180,ssl:"Valid, TLS 1.3",trust:94,up:"99.97%",since:"1995",op:"Amazon.com, Inc.",
-    sum:"The largest online retailer in the US, selling nearly everything with fast Prime shipping, plus a huge third-party seller marketplace. Check seller ratings on third-party listings.",flags:[]},
+    sum:"The world's most-used search engine, plus Maps, Images, News and shopping. Free to use, funded by advertising.",flags:[]},
+  "youtube.com":{name:"YouTube",cat:"video",status:"online",ms:140,ssl:"Valid, TLS 1.3",trust:95,up:"99.99%",since:"2005",op:"Google LLC (acquired 2006)",
+    sum:"The largest video-sharing platform. Creators upload videos, streams and Shorts; viewers watch free with ads or through Premium.",flags:[]},
+  "facebook.com":{name:"Facebook",cat:"social",status:"online",ms:160,ssl:"Valid, TLS 1.3",trust:85,up:"99.9%",since:"2004",op:"Meta Platforms, Inc.",
+    sum:"Social network for friends and family, groups, events and Marketplace. Legitimate, but Marketplace scams are common, so meet sellers in person and never pay upfront.",flags:["Paid a $5 billion FTC privacy settlement in 2019."]},
+  "instagram.com":{name:"Instagram",cat:"social",status:"online",ms:170,ssl:"Valid, TLS 1.3",trust:85,up:"99.9%",since:"2010",op:"Meta Platforms, Inc. (acquired 2012)",
+    sum:"Photo and short-video sharing with Stories, Reels and direct messages. Watch for impersonation accounts and fake giveaway DMs.",flags:[]},
+  "amazon.com":{name:"Amazon",cat:"shopping",status:"online",ms:180,ssl:"Valid, TLS 1.3",trust:94,up:"99.99%",since:"1995",op:"Amazon.com, Inc.",
+    sum:"The largest online retailer in the US, with fast Prime shipping and a huge third-party seller marketplace. Check seller ratings on third-party listings.",flags:[]},
   "tiktok.com":{name:"TikTok",cat:"video",status:"online",ms:190,ssl:"Valid, TLS 1.3",trust:76,up:"99.9%",since:"2017",op:"TikTok (ByteDance origin)",
-    sum:"Short-form video platform driven by an algorithmic For You feed. Hugely popular for entertainment, trends, and creator commerce through TikTok Shop.",
-    flags:["Ongoing US government scrutiny over user data and ownership."]},
+    sum:"Short-form video platform driven by an algorithmic For You feed, popular for entertainment, trends and TikTok Shop.",flags:["Ongoing US government scrutiny over user data and ownership."]},
   "temu.com":{name:"Temu",cat:"shopping",status:"online",ms:230,ssl:"Valid, TLS 1.3",trust:62,up:"99.9%",since:"2022",op:"PDD Holdings",
-    sum:"Discount marketplace shipping low-cost goods, mostly directly from manufacturers overseas. It is a real company and orders do arrive, but quality and delivery times vary widely.",
-    flags:["Sued by state attorneys general over data collection practices, including Arkansas in 2024.","Frequent customer complaints about product quality and slow shipping."]},
-  "wikipedia.org":{name:"Wikipedia",cat:"reference",status:"online",ms:110,ssl:"Valid, TLS 1.3",trust:96,up:"99.98%",since:"2001",op:"Wikimedia Foundation (nonprofit)",
-    sum:"Free, volunteer-written encyclopedia in hundreds of languages. No ads; funded by donations. Great starting point, but check the cited sources for anything important.",flags:[]},
+    sum:"Discount marketplace shipping low-cost goods mostly direct from overseas manufacturers. A real company, but quality and delivery times vary widely.",flags:["Sued by state attorneys general over data collection practices, including Arkansas in 2024.", "Frequent complaints about product quality and slow shipping."]},
+  "wikipedia.org":{name:"Wikipedia",cat:"reference",status:"online",ms:110,ssl:"Valid, TLS 1.3",trust:96,up:"99.99%",since:"2001",op:"Wikimedia Foundation (nonprofit)",
+    sum:"Free, volunteer-written encyclopedia in hundreds of languages. No ads, funded by donations. Check the cited sources for anything important.",flags:[]},
   "reddit.com":{name:"Reddit",cat:"social",status:"online",ms:210,ssl:"Valid, TLS 1.3",trust:86,up:"99.9%",since:"2005",op:"Reddit, Inc. (public since 2024)",
-    sum:"Community forums (subreddits) where users post, vote, and discuss every topic imaginable. Legitimate; treat advice from anonymous users with healthy skepticism.",flags:[]},
-  "x.com":{name:"X (formerly Twitter)",cat:"social",status:"online",ms:200,ssl:"Valid, TLS 1.3",trust:78,up:"99.8%",since:"2006",op:"X Corp.",
-    sum:"Real-time microblogging network for news, commentary, and public conversation. Rebranded from Twitter in 2023.",
-    flags:["Verification checkmarks are paid and do not confirm identity. Watch for impersonation."]},
-  "netflix.com":{name:"Netflix",cat:"streaming",status:"online",ms:150,ssl:"Valid, TLS 1.3",trust:93,up:"99.97%",since:"1997",op:"Netflix, Inc.",
-    sum:"Subscription streaming service for movies, series, and games. Legitimate; emails asking you to 'update payment' through a link are a common phishing scam.",flags:[]},
-  "chatgpt.com":{name:"ChatGPT",cat:"ai",status:"online",ms:190,ssl:"Valid, TLS 1.3",trust:90,up:"99.7%",since:"2022",op:"OpenAI",
-    sum:"AI chatbot for writing, research, coding, and questions. Free and paid tiers. Legitimate; verify facts it gives you before relying on them.",flags:[]},
-  "example.com":{name:"Example Domain",cat:"test",status:"online",ms:60,ssl:"Valid, TLS 1.3",trust:90,up:"99.99%",since:"1999",op:"IANA (reserved domain)",
+    sum:"Community forums where users post, vote and discuss every topic imaginable. Treat advice from anonymous users with healthy skepticism.",flags:[]},
+  "x.com":{name:"X (formerly Twitter)",cat:"social",status:"online",ms:200,ssl:"Valid, TLS 1.3",trust:78,up:"99.9%",since:"2006",op:"X Corp.",
+    sum:"Real-time microblogging network for news and public conversation. Rebranded from Twitter in 2023.",flags:["Verification checkmarks are paid and do not confirm identity."]},
+  "netflix.com":{name:"Netflix",cat:"streaming",status:"online",ms:150,ssl:"Valid, TLS 1.3",trust:93,up:"99.99%",since:"1997",op:"Netflix, Inc.",
+    sum:"Subscription streaming for movies, series and games. Emails asking you to 'update payment' through a link are a common phishing scam.",flags:[]},
+  "chatgpt.com":{name:"ChatGPT",cat:"ai",status:"online",ms:190,ssl:"Valid, TLS 1.3",trust:90,up:"99.9%",since:"2022",op:"OpenAI",
+    sum:"AI chatbot for writing, research, coding and questions, with free and paid tiers. Verify facts before relying on them.",flags:[]},
+  "spotify.com":{name:"Spotify",cat:"streaming",status:"online",ms:145,ssl:"Valid, TLS 1.3",trust:92,up:"99.9%",since:"2008",op:"Spotify AB",
+    sum:"Music and podcast streaming with free ad-supported and Premium tiers. Cheap 'lifetime Premium' offers sold elsewhere are scams.",flags:[]},
+  "discord.com":{name:"Discord",cat:"social",status:"online",ms:165,ssl:"Valid, TLS 1.3",trust:85,up:"99.9%",since:"2015",op:"Discord Inc.",
+    sum:"Voice, video and text chat organized into servers, popular with gamers and communities.",flags:["Fake 'free Nitro' links in DMs are a common account-theft scam."]},
+  "roblox.com":{name:"Roblox",cat:"gaming",status:"online",ms:185,ssl:"Valid, TLS 1.3",trust:84,up:"99.9%",since:"2006",op:"Roblox Corporation",
+    sum:"Platform where users play and build games, popular with kids and teens. Paid currency is called Robux.",flags:["Free Robux sites are scams. Parental controls are worth setting up."]},
+  "twitch.tv":{name:"Twitch",cat:"video",status:"online",ms:175,ssl:"Valid, TLS 1.3",trust:87,up:"99.9%",since:"2011",op:"Amazon (acquired 2014)",
+    sum:"Live streaming platform built around gaming, chat and creator subscriptions.",flags:[]},
+  "zoom.us":{name:"Zoom",cat:"work",status:"online",ms:160,ssl:"Valid, TLS 1.3",trust:90,up:"99.9%",since:"2011",op:"Zoom Communications",
+    sum:"Video meetings and webinars with free and paid plans, widely used for work and school.",flags:[]},
+  "paypal.com":{name:"PayPal",cat:"finance",status:"online",ms:170,ssl:"Valid, TLS 1.3",trust:91,up:"99.9%",since:"1998",op:"PayPal Holdings, Inc.",
+    sum:"Online payments and money transfers with purchase protection on eligible goods.",flags:["One of the most impersonated brands in phishing emails. Log in by typing the address yourself, never through an emailed link."]},
+  "ebay.com":{name:"eBay",cat:"shopping",status:"online",ms:195,ssl:"Valid, TLS 1.3",trust:88,up:"99.9%",since:"1995",op:"eBay Inc.",
+    sum:"Auction and fixed-price marketplace for new and used goods, with buyer protection on most purchases.",flags:[]},
+  "walmart.com":{name:"Walmart",cat:"shopping",status:"online",ms:190,ssl:"Valid, TLS 1.3",trust:92,up:"99.9%",since:"2000",op:"Walmart Inc.",
+    sum:"Online arm of the largest US retailer, with store pickup, delivery and a third-party marketplace.",flags:[]},
+  "target.com":{name:"Target",cat:"shopping",status:"online",ms:185,ssl:"Valid, TLS 1.3",trust:92,up:"99.9%",since:"1999",op:"Target Corporation",
+    sum:"Online store for the US retail chain, with same-day pickup and delivery options.",flags:[]},
+  "linkedin.com":{name:"LinkedIn",cat:"social",status:"online",ms:200,ssl:"Valid, TLS 1.3",trust:88,up:"99.9%",since:"2003",op:"Microsoft (acquired 2016)",
+    sum:"Professional network for jobs, hiring and industry news.",flags:["Fake recruiter accounts and job-offer scams are common. Verify before sharing documents."]},
+  "snapchat.com":{name:"Snapchat",cat:"social",status:"online",ms:180,ssl:"Valid, TLS 1.3",trust:83,up:"99.9%",since:"2011",op:"Snap Inc.",
+    sum:"Messaging app built on disappearing photos and videos, Stories and Spotlight.",flags:[]},
+  "whatsapp.com":{name:"WhatsApp",cat:"social",status:"online",ms:155,ssl:"Valid, TLS 1.3",trust:89,up:"99.9%",since:"2009",op:"Meta Platforms, Inc. (acquired 2014)",
+    sum:"Free encrypted messaging and calling over the internet, used worldwide.",flags:["'Hi Mum' and wrong-number investment scams often start here. Verify before sending money."]},
+  "pinterest.com":{name:"Pinterest",cat:"social",status:"online",ms:185,ssl:"Valid, TLS 1.3",trust:87,up:"99.9%",since:"2010",op:"Pinterest, Inc.",
+    sum:"Visual discovery board for recipes, style, home and project ideas.",flags:[]},
+  "steampowered.com":{name:"Steam",cat:"gaming",status:"online",ms:175,ssl:"Valid, TLS 1.3",trust:90,up:"99.9%",since:"2003",op:"Valve Corporation",
+    sum:"The largest PC game store and library, with sales, reviews and community features.",flags:["Fake 'Steam gift' and trade links are a common account-theft scam."]},
+  "shein.com":{name:"SHEIN",cat:"shopping",status:"online",ms:225,ssl:"Valid, TLS 1.3",trust:64,up:"99.9%",since:"2008",op:"Roadget Business / SHEIN Group",
+    sum:"Fast-fashion retailer shipping low-cost clothing direct from overseas suppliers. Sizing and quality vary widely.",flags:["Faced regulatory scrutiny and reporting over supply-chain and data practices."]},
+  "aliexpress.com":{name:"AliExpress",cat:"shopping",status:"online",ms:235,ssl:"Valid, TLS 1.3",trust:70,up:"99.9%",since:"2010",op:"Alibaba Group",
+    sum:"Global marketplace of third-party sellers with very low prices and long shipping times.",flags:["Seller quality varies a lot. Check individual seller ratings and expect counterfeits in some categories."]},
+  "etsy.com":{name:"Etsy",cat:"shopping",status:"online",ms:195,ssl:"Valid, TLS 1.3",trust:88,up:"99.9%",since:"2005",op:"Etsy, Inc.",
+    sum:"Marketplace for handmade, vintage and craft goods from independent sellers.",flags:[]},
+  "canva.com":{name:"Canva",cat:"work",status:"online",ms:165,ssl:"Valid, TLS 1.3",trust:90,up:"99.9%",since:"2013",op:"Canva Pty Ltd",
+    sum:"Browser-based design tool for graphics, social posts, documents and presentations, with free and Pro plans.",flags:[]},
+  "github.com":{name:"GitHub",cat:"work",status:"online",ms:150,ssl:"Valid, TLS 1.3",trust:93,up:"99.99%",since:"2008",op:"Microsoft (acquired 2018)",
+    sum:"The largest host for code repositories and open-source collaboration.",flags:[]},
+  "cash.app":{name:"Cash App",cat:"finance",status:"online",ms:175,ssl:"Valid, TLS 1.3",trust:82,up:"99.9%",since:"2013",op:"Block, Inc.",
+    sum:"Peer-to-peer payment app with debit card, direct deposit and investing features.",flags:["Payments are instant and usually cannot be reversed. Only send money to people you know."]},
+  "hulu.com":{name:"Hulu",cat:"streaming",status:"online",ms:165,ssl:"Valid, TLS 1.3",trust:90,up:"99.9%",since:"2007",op:"The Walt Disney Company",
+    sum:"Subscription streaming for TV, movies and live TV add-ons in the US.",flags:[]},
+  "example.com":{name:"Example Domain",cat:"test",status:"online",ms:60,ssl:"Valid, TLS 1.3",trust:90,up:"99.9%",since:"1999",op:"IANA (reserved domain)",
     sum:"A reserved domain set aside for documentation and testing (RFC 2606). It serves a simple placeholder page and is safe to load.",flags:[]},
   "geocities.com":{name:"GeoCities",cat:"hosting",status:"offline",ms:null,ssl:"None",trust:0,up:"0%",since:"1994",op:"Yahoo (acquired 1999)",
-    sum:"A free web hosting service that defined the 1990s personal homepage. Yahoo shut it down in the US in October 2009 and in Japan in 2019. The original sites are gone.",
-    flags:["Service discontinued. Any page claiming to be GeoCities today is not the original."]}
+    sum:"A free web hosting service that defined the 1990s personal homepage. Yahoo shut it down in the US in October 2009 and in Japan in 2019.",flags:["Service discontinued. Any page claiming to be GeoCities today is not the original."]}
 };
 var ALIAS = {"twitter.com":"x.com","fb.com":"facebook.com","youtu.be":"youtube.com","chat.openai.com":"chatgpt.com","en.wikipedia.org":"wikipedia.org","amzn.com":"amazon.com","m.facebook.com":"facebook.com"};
 
@@ -512,9 +545,11 @@ var ALTS = {
   hosting:[["Neocities","neocities.org",88],["WordPress.com","wordpress.com",91],["Carrd","carrd.co",88]],
   news:[["AP News","apnews.com",95],["Reuters","reuters.com",95],["BBC News","bbc.com",93]],
   finance:[["NerdWallet","nerdwallet.com",90],["Investopedia","investopedia.com",91],["Bankrate","bankrate.com",89]],
+  gaming:[["Steam","steampowered.com",90],["Epic Games","epicgames.com",88],["itch.io","itch.io",86]],
+  work:[["Canva","canva.com",90],["Google Docs","docs.google.com",95],["Notion","notion.so",90]],
   general:[["Google","google.com",97],["Wikipedia","wikipedia.org",96],["DuckDuckGo","duckduckgo.com",92]]
 };
-var CATNAME = {search:"Search engines",social:"Social platforms",shopping:"Online stores",video:"Video platforms",reference:"Reference",streaming:"Streaming",ai:"AI assistants",test:"Test sites",hosting:"Site builders",news:"News",finance:"Money",general:"Popular picks"};
+var CATNAME = {gaming:"Games",work:"Work tools",search:"Search engines",social:"Social platforms",shopping:"Online stores",video:"Video platforms",reference:"Reference",streaming:"Streaming",ai:"AI assistants",test:"Test sites",hosting:"Site builders",news:"News",finance:"Money",general:"Popular picks"};
 
 var TRENDING = [["temu.com","+212%"],["chatgpt.com","+88%"],["tiktok.com","+64%"],["x.com","+41%"],["netflix.com","+19%"],["amazon.com","+17%"],["reddit.com","+15%"],["facebook.com","+12%"],["wikipedia.org","+9%"],["geocities.com","+6%"]];
 
@@ -680,6 +715,8 @@ function show(d,s){
       '<a class="vis" href="https://'+esc(a[1])+'" target="_blank" rel="sponsored noopener noreferrer">Visit</a></div></div>';
   }).join("");
   renderStars(); renderComments();
+  try{history.replaceState(null,"","?q="+encodeURIComponent(d))}catch(e){}
+  remember(d);
   var r=$("results"); r.classList.add("on");
   r.scrollIntoView({behavior:"smooth",block:"start"});
   document.title=s.name+" status — SiteReport.live";
@@ -688,6 +725,25 @@ function countUp(el,to){
   var t0=performance.now(),dur=1000;
   (function f(t){var p=Math.min(1,(t-t0)/dur);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0);
 }
+
+/* ---------- Recently checked + share ---------- */
+var recent = load("sitereport:recent", []);
+function remember(d){
+  recent = [d].concat(recent.filter(function(x){return x!==d})).slice(0,8);
+  save("sitereport:recent",recent); renderRecent();
+}
+function renderRecent(){
+  var box=$("recent");
+  if(!recent.length){box.innerHTML="";return}
+  box.innerHTML='<span>Recently checked:</span>'+recent.map(function(d){
+    return '<button type="button" class="chip" data-q="'+esc(d)+'">'+esc(d)+'</button>'}).join("");
+}
+$("share").addEventListener("click",function(){
+  var url=location.origin+location.pathname+"?q="+encodeURIComponent(current||"");
+  if(navigator.share){navigator.share({title:"SiteReport.live",text:"Report for "+current,url:url}).catch(function(){})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast("Link copied")},function(){toast(url)})}
+  else toast(url);
+});
 
 /* ---------- Community ---------- */
 var STAR='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2 6.3 20.3l1.2-6.4L2.8 9.5l6.4-.8z"/></svg>';
@@ -755,8 +811,11 @@ $("nForm").addEventListener("submit",function(e){
     ok.textContent="You're in. Your first Outage Alert arrives on the 1st of next month.";
     void ok.offsetWidth; ok.classList.add("on"); $("nEmail").value=""; toast("Subscribed to the SiteReport Outage Alert");
   }
-  fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
-    body:new URLSearchParams({"form-name":"outage-alert",email:v}).toString()})
+  var req = NEWSLETTER_ENDPOINT
+    ? fetch(NEWSLETTER_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({email:v,source:"sitereport.live"})})
+    : fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body:new URLSearchParams({"form-name":"outage-alert",email:v}).toString()});
+  req
     .then(function(r){ if(r.ok) done(); else throw 0; })
     .catch(function(){ $("nErr").textContent="Couldn't subscribe right now. Try again in a minute."; })
     .then(function(){btn.disabled=false;btn.textContent="Get the monthly alert"});
@@ -803,7 +862,12 @@ var chips=$("chips");
 });
 var html=TRENDING.map(function(t){return '<button type="button" data-q="'+t[0]+'">'+t[0]+'<b>'+t[1]+'</b></button>'}).join("");
 $("track").innerHTML=html+html.replace(/<button /g,'<button tabindex="-1" aria-hidden="true" ');
+["google.com","netflix.com","tiktok.com","temu.com","facebook.com","amazon.com","chatgpt.com","instagram.com","roblox.com","discord.com","paypal.com","x.com"].forEach(function(d){
+  var a=document.createElement("a");a.className="chip";a.href="/site/"+d+".html";a.textContent="Is "+(DB[d]?DB[d].name:d)+" down?";a.style.textDecoration="none";$("popular").appendChild(a)});
 $("yr").textContent=new Date().getFullYear();
+renderRecent();
+var qp=new URLSearchParams(location.search).get("q");
+if(qp){$("q").value=qp;run(qp)}
 })();
 </script>
 </body>
