@@ -73,13 +73,12 @@ a{color:var(--steel)}
 .nav .cta:hover{background:var(--steel-deep);color:#fff}
 :root[data-theme="dark"] .nav .cta{color:#10202F}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nav .cta{color:#10202F}}
-.ticker{border-top:1px solid var(--line);overflow:hidden;white-space:nowrap;font-size:.84rem;color:var(--muted);display:flex;align-items:center}
-.ticker .lead{flex:none;padding:7px 14px 7px 20px;font-weight:600;color:var(--steel);background:inherit;position:relative;z-index:1}
-.track{display:inline-flex;gap:28px;padding:7px 0;animation:scroll 60s linear infinite}
+.ticker{border-top:1px solid var(--line);overflow:visible;white-space:normal;font-size:.84rem;color:var(--muted);display:block;padding:8px 20px 10px}
+.ticker .lead{display:block;padding:0 0 8px;font-weight:700;color:var(--steel);background:inherit;position:static}
+.track{display:flex;flex-wrap:wrap;gap:8px 10px;padding:0;animation:none}
 .ticker:hover .track{animation-play-state:paused}
-.track button{background:none;border:0;padding:0;color:var(--muted);cursor:pointer;font-size:.84rem}
+.track button{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--muted);cursor:pointer;font-size:.84rem}
 .track button:hover{color:var(--steel)}
-.track b{color:var(--emerald-deep);font-weight:600;margin-left:4px}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* Layout */
@@ -255,7 +254,7 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .track{animation:none}
-  .ticker{overflow-x:auto}
+  .ticker{overflow:visible}
 }
 </style>
 <script type="application/ld+json">
@@ -281,8 +280,8 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
       <button class="cta" data-open-contact>Contact</button>
     </nav>
   </div>
-  <div class="ticker" aria-label="Trending searches">
-    <div class="lead">Trending</div>
+  <div class="ticker" aria-label="Try these sites">
+    <div class="lead">Try these sites</div>
     <div class="track" id="track"></div>
   </div>
 </header>
@@ -321,6 +320,7 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
             <div class="site-name" id="rName"></div>
             <div class="site-dom" id="rDom"></div>
             <div id="rEst"></div>
+            <div id="checkedAt" class="muted" style="margin-top:8px;font-size:.9rem"></div>
             <button class="btn ghost" id="share" style="margin-top:14px;padding:8px 14px;font-size:.88rem">Share this report</button>
           </div>
           <div class="gauge" role="img" id="gaugeWrap">
@@ -332,9 +332,10 @@ footer button{background:none;border:0;padding:0;color:var(--steel);cursor:point
           </div>
         </div>
         <div class="metrics" id="metrics"></div>
+        <p class="muted" style="margin-top:10px;font-size:.9rem">Guidance, not a guarantee. This score combines a live check (when available) with domain signals and, for profiled sites, hand-written public information. It does not confirm who truly runs a site, whether its products are genuine, or whether it will honour refunds. Use your own judgment before sharing personal or payment information.</p>
         <div class="summary">
-          <div class="ic" aria-hidden="true">AI</div>
-          <div><div class="t">What this site is for</div><p id="rSum"></p></div>
+          <div class="ic" aria-hidden="true">i</div>
+          <div><div class="t">Summary</div><p id="rSum"></p><p class="muted" style="margin-top:6px;font-size:.9rem">This summary is not a source, not a guarantee — check the site's own policies and reviews before you buy or share information.</p></div>
         </div>
         <ul class="flags" id="flags"></ul>
       </section>
@@ -552,7 +553,7 @@ var ALTS = {
 };
 var CATNAME = {gaming:"Games",work:"Work tools",search:"Search engines",social:"Social platforms",shopping:"Online stores",video:"Video platforms",reference:"Reference",streaming:"Streaming",ai:"AI assistants",test:"Test sites",hosting:"Site builders",news:"News",finance:"Money",general:"Popular picks"};
 
-var TRENDING = [["temu.com","+212%"],["chatgpt.com","+88%"],["tiktok.com","+64%"],["x.com","+41%"],["netflix.com","+19%"],["amazon.com","+17%"],["reddit.com","+15%"],["facebook.com","+12%"],["wikipedia.org","+9%"],["geocities.com","+6%"]];
+var TRY_SITES = ["temu.com","chatgpt.com","tiktok.com","x.com","netflix.com","amazon.com","reddit.com","facebook.com","wikipedia.org","geocities.com"];
 
 /* ---------- Storage (safe) ---------- */
 function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
@@ -679,9 +680,12 @@ function show(d,s){
   current=d; myRating=0;
   var off=s.status==="offline", b=$("badge");
   b.className="badge "+(off?"down":(s.trust>=70?"ok":"warn"));
-  $("badgeTxt").textContent= off?"OFFLINE DETECTED":(s.trust>=70?"ONLINE & VERIFIED":"ONLINE, USE CAUTION");
+  $("badgeTxt").textContent= off?"OFFLINE DETECTED":(s.live?(s.trust>=70?"LIVE TEST PASSED":"LIVE TEST PASSED — USE CAUTION"):(s.trust>=70?"ONLINE":"ONLINE, USE CAUTION"));
   $("rName").textContent=s.name; $("rDom").textContent=d;
   $("rEst").innerHTML = s.est ? '<span class="est">Estimate from domain signals. Live check unavailable right now.</span>' : (s.live ? '<span class="est" style="color:var(--emerald-deep);background:var(--emerald-soft)">Live check just now. Trust Index blends live results with domain reputation signals.</span>' : "");
+  if(s.live){var fmt=new Intl.DateTimeFormat("en-US",{timeZone:"America/Los_Angeles",month:"long",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"});$("checkedAt").textContent="Checked: "+fmt.format(new Date())}
+  else if(s.est){$("checkedAt").textContent="No live check timestamp recorded — estimate only."}
+  else{$("checkedAt").textContent="No live check timestamp recorded for this profile."}
   // gauge
   var C=389.56, col = s.trust>=80?"var(--emerald)":(s.trust>=55?"var(--amber)":"var(--red)");
   var fg=$("gaugeFg"); fg.style.stroke=col; fg.setAttribute("stroke-dashoffset",C);
@@ -693,7 +697,7 @@ function show(d,s){
     ["Response speed", s.ms==null?"—":s.ms+" ms", sp[0], sp[1]],
     ["SSL certificate", s.ssl, sslOk?"Connection encrypted":"Not secure", sslOk?"g":"r"],
     ["Trust Index", s.trust+" / 100", s.trust>=80?"High trust":(s.trust>=55?"Mixed signals":"Low trust"), s.trust>=80?"g":(s.trust>=55?"a":"r")],
-    [s.live?"Status":"30-day uptime", s.up, off?"Currently down":(s.live?"Responded to our probe":"Est. availability"), off?"r":"g"],
+    ["Availability", off?"—":(s.live?"Responded to our probe":"Typically responds — estimate only"), off?"Currently down":(s.live?"Responded to our probe":"Estimate only"), off?"r":"g"],
     ["Online since", s.since, "", ""],
     ["Run by", s.op, "", ""]
   ];
@@ -882,8 +886,8 @@ var chips=$("chips");
 [["Google","google.com"],["Temu","temu.com"],["TikTok","tiktok.com"],["GeoCities","geocities.com"],["A sketchy one","free-prize-claim.xyz"],["Any new site","bayareabikeshop.com"]].forEach(function(c){
   var b=document.createElement("button");b.type="button";b.className="chip";b.dataset.q=c[1];b.textContent=c[0];chips.appendChild(b);
 });
-var html=TRENDING.map(function(t){return '<button type="button" data-q="'+t[0]+'">'+t[0]+'<b>'+t[1]+'</b></button>'}).join("");
-$("track").innerHTML=html+html.replace(/<button /g,'<button tabindex="-1" aria-hidden="true" ');
+var html=TRY_SITES.map(function(d){return '<button type="button" data-q="'+d+'">'+d+'</button>'}).join("");
+$("track").innerHTML=html;
 ["google.com","netflix.com","tiktok.com","temu.com","facebook.com","amazon.com","chatgpt.com","instagram.com","roblox.com","discord.com","paypal.com","x.com"].forEach(function(d){
   var a=document.createElement("a");a.className="chip";a.href="/site/"+d+".html";a.textContent="Is "+(DB[d]?DB[d].name:d)+" down?";a.style.textDecoration="none";$("popular").appendChild(a)});
 $("yr").textContent=new Date().getFullYear();
